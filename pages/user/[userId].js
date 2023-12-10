@@ -7,26 +7,25 @@ const getUserPostsUrl = userId => `${postsUrl}?userId=${userId}`;
 const getUserUrl = userId => `${usersUrl}/${userId}`;
 
 const Post = ({ posts, user: { name, username } }) => (
-  <div>
-    <Link href="/">
-      <a>Back to home</a>
-    </Link>
-    <h1>
-      {name} ({username})
-    </h1>
-    <h2>Posts by {name}</h2>
-    <ul>
-      {posts.map(post => (
-        <li key={post.title}>
-          <Link href={`/post/[id]`} as={`/post/${post.id}`}>
-            <a>
-              {post.id} - {post.title}
-            </a>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
+<div class="p-4">
+  <Link href="/" class="text-blue-500 hover:underline block mb-2">
+    Back to home
+  </Link>
+  <h1 class="text-3xl font-bold mb-2">
+    {name} ({username})
+  </h1>
+  <h2 class="text-2xl font-semibold mb-4">Posts by {name}</h2>
+  <ul>
+    {posts.map(post => (
+      <li key={post.title} class="mb-2">
+        <Link href={`/post/[id]`} as={`/post/${post.id}`} class="text-blue-500 hover:underline">
+          {post.id} - {post.title}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</div>
+
 );
 
 Post.getInitialProps = async ctx => {

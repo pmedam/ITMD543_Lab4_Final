@@ -7,20 +7,19 @@ const postsUrl = `https://jsonplaceholder.typicode.com/posts`;
 const usersUrl = `https://jsonplaceholder.typicode.com/users`;
 
 const Users = ({ users }) => (
-  <section>
-    <h1>Users</h1>
-    <ul>
-      {users.map(user => (
-        <li key={user.id}>
-          <Link href={`/user/[userId]`} as={`/user/${user.id}`}>
-            <a>
-              {user.id} - {user.name} ({user.username})
-            </a>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </section>
+<section class="p-4">
+  <h1 class="text-3xl font-bold mb-4">Users</h1>
+  <ul class="list-disc pl-6">
+    {users.map(user => (
+      <li key={user.id} class="mb-2">
+        <Link className="text-blue-500 hover:underline" href={`/user/[userId]`} as={`/user/${user.id}`}>
+            {user.id} - {user.name} ({user.username})
+        </Link>
+      </li>
+    ))}
+  </ul>
+</section>
+
 );
 
 const getUsers = url => fetch(url).then(_ => _.json());
@@ -33,26 +32,28 @@ const Index = ({ posts }) => {
     getUsers
   );
 
-  return (
-    <>
-      <section>
-        <button onClick={() => setShouldFetchUsers(true)}>Users?</button>
-        <h1>Posts</h1>
-        <ul>
-          {posts.map(post => (
-            <li key={post.title}>
-              <Link href={`/post/[id]`} as={`/post/${post.id}`}>
-                <a>
-                  {post.id} - {post.title}
-                </a>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-      {users && <Users users={users} />}
-    </>
-  );
+  return <>
+<section className="p-4">
+  <button
+    onClick={() => setShouldFetchUsers(true)}
+    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+  >
+    Users?
+  </button>
+  <h1 className="text-3xl font-bold mt-4 mb-2">Posts</h1>
+  <ul className="list-disc pl-6">
+    {posts.map(post => (
+      <li key={post.title} className="mb-2">
+        <Link className="text-blue-500 hover:underline" href={`/post/[id]`} as={`/post/${post.id}`}>
+            {post.id} - {post.title}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</section>
+
+    {users && <Users users={users} />}
+  </>;
 };
 
 Index.getInitialProps = async function() {

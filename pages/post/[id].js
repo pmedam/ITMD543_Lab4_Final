@@ -10,22 +10,17 @@ const Post = ({
   post: { id, title, body },
   user: { id: userId, name, username }
 }) => (
-  <div>
-    <Link href="/">
-      <a>Back to home</a>
-    </Link>
-    <h1>
-      {id} - {title}
-    </h1>
-    <h2>
-      <Link href={`/user/[userId]`} as={`/user/${userId}`}>
-        <a>
-          By {name} ({username})
-        </a>
-      </Link>
-    </h2>
-    <p>{body}</p>
-  </div>
+<div class="p-4">
+  <Link href="/" class="text-blue-500 hover:underline">Back to home</Link>
+  <h1 class="text-3xl font-bold mt-4">
+    {name} ({username})
+  </h1>
+  <h2 class="text-2xl font-semibold mt-2">Posts by {name}</h2>
+  {/* <p class="text-lg mt-2 font-medium text-gray-700">{post.title}</p>
+  <p class="mt-2 text-gray-600">{post.body}</p> */}
+</div>
+
+
 );
 
 Post.getInitialProps = async ctx => {
