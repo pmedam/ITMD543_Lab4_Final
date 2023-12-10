@@ -7,64 +7,84 @@ const postsUrl = `https://jsonplaceholder.typicode.com/posts`;
 const usersUrl = `https://jsonplaceholder.typicode.com/users`;
 
 const Users = ({ users }) => (
-<section class="p-4">
-  <h1 class="text-3xl font-bold mb-4">Users</h1>
-  <ul class="list-disc pl-6">
-    {users.map(user => (
-      <li key={user.id} class="mb-2">
-        <Link className="text-blue-500 hover:underline" href={`/user/[userId]`} as={`/user/${user.id}`}>
-            {user.id} - {user.name} ({user.username})
-        </Link>
-      </li>
-    ))}
-  </ul>
-</section>
-
+  <section className="p-4">
+    <h1 className="text-3xl font-bold mb-4">Users</h1>
+    <div className="flex flex-wrap">
+      {users.map(user => (
+        <div key={user.id} className="w-1/2 mb-2 pr-2">
+          <div className="bg-white p-4 rounded-md hover:shadow-md">
+            <p className="text-sm text-gray-700">{user.id} - {user.name}</p>
+            <p className="text-xs text-gray-500">{user.username}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
 );
 
 const getUsers = url => fetch(url).then(_ => _.json());
 
 const Index = ({ posts }) => {
   const [shouldFetchUsers, setShouldFetchUsers] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const resetToDefault = () => {
+    setDarkMode(false);
+  };
 
   const { data: users } = useSWR(
     () => (shouldFetchUsers ? usersUrl : null),
     getUsers
   );
 
-  return <>
-<section className="p-4">
-  <button
-    onClick={() => setShouldFetchUsers(true)}
-    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-  >
-    Users?
-  </button>
-  <h1 className="text-3xl font-bold mt-4 mb-2">Posts</h1>
-  <ul className="list-disc pl-6">
-    {posts.map(post => (
-      <li key={post.title} className="mb-2">
-        <Link className="text-blue-500 hover:underline" href={`/post/[id]`} as={`/post/${post.id}`}>
-            {post.id} - {post.title}
-        </Link>
-      </li>
-    ))}
-  </ul>
-</section>
+  return (
+    <div className={`min-h-screen flex flex-col ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-600 shadow-md'}`}>
+      <section className="flex-grow p-4 flex justify-center">
+        <div className="w-full md:w-1/2">
+          <button
+            onClick={() => setShouldFetchUsers(true)}
+            className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800 mb-4`}
+          >
+            Users
+          </button>
 
-    {users && <Users users={users} />}
-  </>;
+          <h1 className="text-3xl font-bold mt-4 mb-2">Posts</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {posts.map(post => (
+              <div key={post.title} className="bg-white p-4 rounded-md hover:shadow-md">
+                <p className="text-lg font-medium text-gray-700">{post.id} - {post.title}</p>
+                <Link className="text-blue-500 hover:underline mt-2 block" href={`/post/[id]`} as={`/post/${post.id}`}>
+                  Read more
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {users && <Users users={users} />}
+
+      <button
+        onClick={toggleDarkMode}
+        className={`bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 focus:outline-none focus:shadow-outline-gray active:bg-gray-800 mt-4 ml-4 md:ml-0`}
+      >
+        {darkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
+
+      <link rel="icon" href={darkMode ? '/dark-mode-icon.ico' : '/light-mode-icon.ico'} onClick={resetToDefault} />
+    </div>
+  );
 };
 
-Index.getInitialProps = async function() {
+Index.getInitialProps = async function () {
   const postsResponse = await fetch(postsUrl);
   const posts = (await postsResponse.json()).slice(0, 5);
 
-  // const usersResponse = await fetch(usersUrl);
-  // const users = (await usersResponse.json()).slice(0, 5);
-
-  // console.info(`users`, users);
-  // return { posts, users };
   return { posts };
 };
 
